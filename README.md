@@ -7,7 +7,7 @@ Usage
 =====
 
 ```
-easy\_install requests termcolor 
+easy_install requests termcolor 
 ```
 
 ```
