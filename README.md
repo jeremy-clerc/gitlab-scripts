@@ -6,10 +6,11 @@ Tested with GitLab 6.4.3 API v3
 Requires
 ========
 * Python
-     easy\_install requests termcolor 
+         easy\_install requests termcolor 
 
 Usage
 =====
+```
 usage: create_gitlab_users.py [-h] --token TOKEN --url URL users.csv
 
 Create gitlab users from csv file, with format:
@@ -23,3 +24,4 @@ optional arguments:
   --token TOKEN, -t TOKEN
                         User api token
   --url URL, -u URL     API Url: http://gitlab.example.com/api/v3
+```
