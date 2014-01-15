@@ -6,7 +6,7 @@ Tested with GitLab 6.4.3 API v3
 Requires
 ========
 * Python
-        easy_install requests termcolor 
+        easy\_install requests termcolor 
 Usage
 =====
 ```
