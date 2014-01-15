@@ -3,13 +3,13 @@ creates them in GitLab
 
 Tested with GitLab 6.4.3 API v3
 
-Requires
-========
-* Python
-        easy\_install requests termcolor 
-
 Usage
 =====
+
+```
+easy\_install requests termcolor 
+```
+
 ```
 usage: create_gitlab_users.py [-h] --token TOKEN --url URL users.csv
 
