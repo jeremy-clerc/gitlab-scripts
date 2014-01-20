@@ -1,1 +1,1 @@
-Bob Bob;bob;bob@example.com;IT,JSProjects
+Bob Bob;bob;bob@example.com;IT,JSProjects;ssh-dss AAAAB3NzaC1kc3MAAACBAK4GyBsjlrTDbJTpKEP342HvfVzIH....4GyBsjlrTDbJTpKEP342 user@laptop,ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAts+cULGa....AAQEA user@laptop-work

@@ -16,7 +16,14 @@ import argparse
 from termcolor import colored, cprint
 
 
-parser = argparse.ArgumentParser(description='Create gitlab users from csv file, with format: Name;Username;email;Group1,Group2,Groupn')
+parser = argparse.ArgumentParser(
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    description="""
+Create gitlab users from csv file, with format:
+    Name;Username;email;Group1,Group2,Groupn;sshkey,sshkey
+SSHKey names are formed with the username and counter ex: bob1, bob2, ...       
+""")
+
 parser.add_argument('csv', metavar='users.csv', 
                    help="A csv file containing users.\n")
 parser.add_argument('--token', '-t', required=True, 
@@ -41,6 +48,15 @@ def add_user_to_group(userid, groupid):
     else:
       return False
 
+def add_user_sshkey(userid, title, key):
+    payload = {'id': userid, 'title': title, 'key': key}
+    r = requests.post(apiurl + '/users/' + str(userid) + '/keys', data=json.dumps(payload), headers=headers)
+
+    if r.status_code == 201:
+      return True
+    else:
+      return False
+
 # getting all groups, so we can convert name to id
 r = requests.get(apiurl + '/groups/', headers=headers)
 if r.status_code == 200:
@@ -59,6 +75,7 @@ with open(args.csv, 'r') as csvfile:
     username = user[1]
     email = user[2]
     usergroups = user[3].split(",")
+    userkeys = user[4].split(",") 
     createusrmsg = colored("Creating user [" + name + "] with username [" + username + "] and email [" + email + "]: ", "cyan")
     payload = {"username": username, "email": email, "name": name,"password": password}
     r = requests.post(apiurl + '/users/', data=json.dumps(payload), headers=headers)
@@ -67,10 +84,19 @@ with open(args.csv, 'r') as csvfile:
       print createusrmsg + colored("OK", "green")
       jsobj = json.loads(r.text)
       if jsobj.has_key('id'):
+        userid = jsobj['id']
+        # add user ssh keys
+        for (i, key) in enumerate(userkeys, 1):
+          createkeymsg = colored("\tAdding key " + str(i) + ": ", "cyan")
+          if add_user_sshkey(userid, username + str(i), key):
+            print createkeymsg + colored("OK", "green")
+          else:
+            print createkeymsg + colored("FAILED", "red", attrs=['bold'])
+            
         # add user to groups
         for group in usergroups:
           creategrpmsg = colored("\tAdding user [" + name + "] to group [" + group + "]: ", "cyan")
-          if add_user_to_group(jsobj['id'], groups[group]):
+          if add_user_to_group(userid, groups[group]):
             print creategrpmsg + colored("OK", "green")
           else:
             print creategrpmsg + colored("FAILED", "red", attrs=['bold'])
